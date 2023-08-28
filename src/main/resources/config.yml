@@ -1,0 +1,24 @@
+force-load:
+  - world
+# Example:
+#  - world1
+#  - world2
+
+enable-portal-linking: true
+
+# Experienced users only under this line
+
+world-names: [world]
+
+worlds:
+# Example:
+  world:
+    name: world
+    type: NORMAL
+    seed: 12345
+    portal-nether: world_nether
+    portal-end: world_the_end
+
+# Don't change any values under this line
+
+config-version: 1

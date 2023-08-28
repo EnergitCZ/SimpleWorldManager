@@ -1,0 +1,46 @@
+name: SimpleWorldManager
+version: 1.0
+main: dev.energit.SimpleWorldManager.SimpleWorldManager
+api-version: 1.20
+depend: [SpiKot]
+author: Energit
+commands:
+  swm:
+    description: The world managing command
+    usage: "/swm create <world name>
+
+/swm create <world name> <seed | generator>
+
+/swm create <world name> <seed> <generator>
+
+
+/swm clone <source world> <destination world>
+
+
+/swm load <world name>
+
+/swm unload <world name>
+
+
+/swm remove <world name>
+
+
+/swm tp <world name>
+
+/swm tp <player name> <world name>
+
+/swm teleport <world name>
+
+/swm teleport <player name> <world name>
+
+
+/swm link <source world> <destination world> <nether | end>
+
+
+/swm import <folder name> (WARNING: Experimental) 
+
+
+/swm help"
+    aliases:
+      - mw
+      - world
