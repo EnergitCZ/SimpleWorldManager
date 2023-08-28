@@ -1,6 +1,7 @@
 plugins {
     kotlin("jvm") version "1.9.0"
     application
+    `maven-publish`
 }
 
 group = "dev.energit"
@@ -21,4 +22,16 @@ kotlin {
 
 application {
     mainClass.set("MainKt")
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            groupId = "dev.energit"
+            artifactId = "SimpleWorldManager"
+            version = "1.0"
+
+            from(components["java"])
+        }
+    }
 }
