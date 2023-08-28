@@ -48,6 +48,7 @@ or
 `/swm teleport player <world name>`
 
 ### Link worlds
+NOTE: Experimental
 
 `/swm link <source world> <destination world> nether`
 
