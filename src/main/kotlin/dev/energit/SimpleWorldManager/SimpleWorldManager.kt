@@ -264,7 +264,7 @@ private class SwmCommand() : CommandExecutor {
                             if (player == null) {
                                 sender.sendMessage("Specified player doesn't exist")
                             } else {
-                                when (simpleWorldManagerApi.teleportPlayerIntoWorld(player, args[1])) {
+                                when (simpleWorldManagerApi.teleportPlayerIntoWorld(player, args[2])) {
                                     TeleportToWorldResponse.UNLOADED_WORLD -> { sender.sendMessage("Destination world isn't loaded") }
                                     TeleportToWorldResponse.NONEXISTENT_WORLD -> { sender.sendMessage("Destination world doesn't exist") }
                                     TeleportToWorldResponse.SUCCESS -> {}
