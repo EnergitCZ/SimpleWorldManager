@@ -76,7 +76,7 @@ WARNING: Experimental
 <dependency>
     <groupId>com.github.EnergitCZ</groupId>
     <artifactId>SimpleWorldManager</artifactId>
-    <version>1.0</version>
+    <version>1.0.1</version>
 </dependency>
 ```
 
@@ -89,7 +89,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.github.EnergitCZ:SimpleWorldManager:1.0'
+    implementation 'com.github.EnergitCZ:SimpleWorldManager:1.0.1'
 }
 ```
 
@@ -100,7 +100,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly("com.github.EnergitCZ:SimpleWorldManager:1.0")
+    compileOnly("com.github.EnergitCZ:SimpleWorldManager:1.0.1")
 }
 ```
 
