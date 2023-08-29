@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "dev.energit"
-version = "1.0-SNAPSHOT"
+version = "1.0.1"
 
 repositories {
     mavenCentral()
@@ -29,7 +29,7 @@ publishing {
         create<MavenPublication>("maven") {
             groupId = "dev.energit"
             artifactId = "SimpleWorldManager"
-            version = "1.0"
+            version = "1.0.1"
 
             from(components["java"])
         }
