@@ -97,6 +97,7 @@ class SimpleWorldManager : JavaPlugin() {
             this.config.set("$path.portal-nether", wc.portalNether)
             this.config.set("$path.portal-end", wc.portalEnd)
         }
+        this.config.set("world-names", worldNames)
         this.saveConfig()
     }
 
