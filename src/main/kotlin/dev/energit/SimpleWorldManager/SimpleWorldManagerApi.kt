@@ -6,7 +6,6 @@ import org.bukkit.WorldCreator
 import org.bukkit.entity.Player
 import java.io.File
 
-
 enum class CloneWorldResponse {
     SUCCESS,
     NONEXISTENT_WORLD,
@@ -383,7 +382,7 @@ class SimpleWorldManagerApi {
         return ImportWorldResponse.SUCCESS
     }
 
-    fun checkWorld(name: String) : Boolean {
+    fun checkWorldExists(name: String) : Boolean {
         /*
         Check if a world exists
          */
