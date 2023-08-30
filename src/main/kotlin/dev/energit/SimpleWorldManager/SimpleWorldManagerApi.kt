@@ -382,6 +382,15 @@ class SimpleWorldManagerApi {
         logger.info("Importing of level \"$sname\" finished")
         return ImportWorldResponse.SUCCESS
     }
+
+    fun checkWorld(name: String) : Boolean {
+        /*
+        Check if a world exists
+         */
+        val sname = makeFilenameSafe(name)
+
+        return sname in worldsConfig
+    }
 }
 
 val simpleWorldManagerApi = SimpleWorldManagerApi()
