@@ -387,8 +387,16 @@ class SimpleWorldManagerApi {
         Check if a world exists
          */
         val sname = makeFilenameSafe(name)
-
         return sname in worldsConfig
+    }
+
+    fun checkWorldLoaded(name: String) : Boolean {
+        /*
+        Check if a world is loaded
+         */
+        val sname = makeFilenameSafe(name)
+        Bukkit.getWorld(sname) ?: return false
+        return true
     }
 }
 
