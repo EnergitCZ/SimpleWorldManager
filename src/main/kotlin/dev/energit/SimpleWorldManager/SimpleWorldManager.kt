@@ -39,6 +39,7 @@ val worldNames = mutableListOf<String>()
 
 val forceLoad = mutableListOf<String>()
 
+var enablePortalLinking = true
 class SimpleWorldManager : JavaPlugin() {
     override fun onEnable() {
         registerLogger(logger)
@@ -74,7 +75,9 @@ class SimpleWorldManager : JavaPlugin() {
             }
         }
 
-        if (config.getBoolean("enable-portal-linking")) {
+        enablePortalLinking = config.getBoolean("enable-portal-linking")
+
+        if (enablePortalLinking) {
             Bukkit.getServer().pluginManager.registerEvents(PortalLinkListener(), this)
         }
 
@@ -334,6 +337,27 @@ private class SwmCommand() : CommandExecutor {
                         return false
                     }
                 }
+                "linking" -> {
+                    if (args.size != 2) {
+                        sender.sendMessage("Invalid usage")
+                        return false
+                    }
+                    when (args[1]) {
+                        "enable" -> {
+                            enablePortalLinking = true
+                            sender.sendMessage("Portal linking enabled")
+                        }
+                        "disable" -> {
+                            enablePortalLinking = false
+                            sender.sendMessage("Portal linking disabled")
+                        }
+                        else -> {
+                            sender.sendMessage("Invalid usage")
+                            return false
+                        }
+                    }
+                    sender.sendMessage("Please restart the server for the changes to apply")
+                }
                 "link" -> {
                     if (args.size != 4) {
                         sender.sendMessage("Invalid usage")
@@ -388,7 +412,7 @@ private class SwmCommand() : CommandExecutor {
                     when (args[1]) {
                         "add" -> {
                             sender.sendMessage("Adding world to the forceload list")
-                            if (!simpleWorldManagerApi.checkWorld(args[2])) {
+                            if (!simpleWorldManagerApi.checkWorldExists(args[2])) {
                                 sender.sendMessage("World with that name doesn't exist")
                             } else if (args[2] in forceLoad) {
                                 sender.sendMessage("World already in the forceload list")
