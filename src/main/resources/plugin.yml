@@ -34,6 +34,10 @@ commands:
 /swm teleport <player name> <world name>
 
 
+/swm linking enable
+
+/swm linking disable
+
 /swm link <source world> <destination world> <nether | end>
 
 
