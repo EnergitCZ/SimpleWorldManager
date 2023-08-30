@@ -63,14 +63,6 @@ class SimpleWorldManager : JavaPlugin() {
             worldsConfig[it] = wc
         }
 
-        logger.info("Current config:")
-        worldsConfig.forEach {
-            logger.info("-----")
-            logger.info("Name: ${it.key}")
-            logger.info("Real name: ${it.value.name}")
-            logger.info("-----")
-        }
-
         this.config.getStringList("force-load").forEach {
             forceLoad.add(it)
 
