@@ -10,6 +10,7 @@ It does what it says, manages worlds.
  - Clone worlds
  - Link nether and end portals
  - Import worlds
+ - Set server spawn
 
 ## Installation
 This plugin requires [SpiKot](https://github.com/EnergitCZ/SpiKot)
@@ -55,6 +56,13 @@ or
 
 `/swm teleport player <world name>`
 
+### Enable or disable world linking
+Enabled by default
+
+`/swm linking enable`
+
+`/swm linking disable`
+
 ### Link worlds
 NOTE: Experimental
 
@@ -66,6 +74,20 @@ NOTE: Experimental
 WARNING: Experimental
 
 `/swm import <world folder>`
+
+### Set server spawn
+
+`/swm spawn override enable`
+
+`/swm spawn override disable`
+
+`/swm spawn reset`
+
+`/swm spawn set <world name> <x> <y> <z>`
+
+`/swm spawn set <world name> <x> <y> <z> <yaw> <pitch>`
+
+`/swm spawn set <world name> default`
 
 ## API usage
 
