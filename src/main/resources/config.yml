@@ -1,3 +1,8 @@
+# Config for SimpleWorldManager
+#
+# Edit only if server is not running
+# else your changes will be overwritten
+
 force-load:
   - world
 # Example:
