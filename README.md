@@ -6,6 +6,7 @@ It does what it says, manages worlds.
  - Remove worlds
  - Teleport players between worlds
  - Load and unload worlds
+ - Load worlds on startup
  - Clone worlds
  - Link nether and end portals
  - Import worlds
@@ -29,6 +30,13 @@ This plugin requires [SpiKot](https://github.com/EnergitCZ/SpiKot)
 `/swm load <world name>`
 
 `/swm unload <world name>`
+
+### Load on startup
+`/swm forceload add <world name>`
+
+`/swm forceload remove <world name>`
+
+`/swm forceload rem <world name>`
 
 ### Clone worlds
 `/swm clone <source world name> <destination world name>`

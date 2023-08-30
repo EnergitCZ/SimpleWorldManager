@@ -40,6 +40,13 @@ commands:
 /swm import <folder name> (WARNING: Experimental) 
 
 
+/swm forceload add <world name>
+
+/swm forceload rem <world name>
+
+/swm forceload remove <world name>
+
+
 /swm help"
     aliases:
       - mw

@@ -37,6 +37,8 @@ val worldsConfig = mutableMapOf<String, WorldConfig>()
 
 val worldNames = mutableListOf<String>()
 
+val forceLoad = mutableListOf<String>()
+
 class SimpleWorldManager : JavaPlugin() {
     override fun onEnable() {
         registerLogger(logger)
@@ -45,9 +47,7 @@ class SimpleWorldManager : JavaPlugin() {
 
         this.config.getStringList("world-names").forEach {
             worldNames.add(it)
-        }
 
-        worldNames.forEach {
             val wc = WorldConfig(
                 it,
                 when (this.config.getString("worlds.$it.type")) {
@@ -72,6 +72,8 @@ class SimpleWorldManager : JavaPlugin() {
         }
 
         this.config.getStringList("force-load").forEach {
+            forceLoad.add(it)
+
             val world = Bukkit.getWorld(it)
             if (world == null) {
                 simpleWorldManagerApi.loadWorld(it)
@@ -98,6 +100,7 @@ class SimpleWorldManager : JavaPlugin() {
             this.config.set("$path.portal-end", wc.portalEnd)
         }
         this.config.set("world-names", worldNames)
+        this.config.set("force-load", forceLoad)
         this.saveConfig()
     }
 
@@ -383,6 +386,36 @@ private class SwmCommand() : CommandExecutor {
                         ImportWorldResponse.SUCCESS -> { sender.sendMessage("World imported") }
                     }
 
+                }
+                "forceload" -> {
+                    if (args.size != 3) {
+                        sender.sendMessage("Invalid usage")
+                        return false
+                    }
+
+                    when (args[1]) {
+                        "add" -> {
+                            sender.sendMessage("Adding world to the forceload list")
+                            if (!simpleWorldManagerApi.checkWorld(args[2])) {
+                                sender.sendMessage("World with that name doesn't exist")
+                            } else if (args[2] in forceLoad) {
+                                sender.sendMessage("World already in the forceload list")
+                            } else {
+                                forceLoad.add(args[2])
+                                sender.sendMessage("World added")
+                            }
+                        }
+                        "remove", "rem" -> {
+                            sender.sendMessage("Removing world from forceload list")
+                            if (args[2] in forceLoad) {
+                                forceLoad.remove(args[2])
+                                sender.sendMessage("World removed")
+                            } else {
+                                sender.sendMessage("World not in the forceload list")
+                            }
+
+                        }
+                    }
                 }
                 else -> {
                     return false
