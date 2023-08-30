@@ -51,6 +51,19 @@ commands:
 /swm forceload remove <world name>
 
 
+/swm spawn override enable
+
+/swm spawn override disable
+
+/swm spawn reset
+
+/swm spawn set <world name> <x> <y> <z>
+
+/swm spawn set <world name> <x> <y> <z> <yaw> <pitch>
+
+/swm spawn set <world name> default
+
+
 /swm help"
     aliases:
       - mw

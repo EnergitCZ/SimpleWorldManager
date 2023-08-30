@@ -11,9 +11,20 @@ force-load:
 
 enable-portal-linking: true
 
-# Experienced users only under this line
+override-spawn: true
+global-spawn:
+  world: world
+  xyz: default
+  # Example:
+  # xyz:
+  #   - -20 # X
+  #   - 64  # Y
+  #   - 30  # Z
+  #   - 0   # Yaw
+  #   - 0   # pitch
 
-world-names: [world]
+world-names:
+  - world
 
 worlds:
 # Example:
@@ -24,6 +35,5 @@ worlds:
     portal-nether: world_nether
     portal-end: world_the_end
 
-# Don't change any values under this line
-
-config-version: 1
+# Don't change config-version
+config-version: 2

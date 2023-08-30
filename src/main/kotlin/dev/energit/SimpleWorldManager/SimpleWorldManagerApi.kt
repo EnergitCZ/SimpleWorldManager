@@ -1,6 +1,7 @@
 package dev.energit.SimpleWorldManager
 
 import org.bukkit.Bukkit
+import org.bukkit.Location
 import org.bukkit.World
 import org.bukkit.WorldCreator
 import org.bukkit.entity.Player
@@ -56,6 +57,12 @@ enum class ImportWorldResponse {
     IS_FILE,
     ALREADY_IMPORTED,
     IMPORTING_ERROR
+}
+
+enum class SetServerSpawnResponse {
+    SUCCESS,
+    NONEXISTENT_WORLD,
+    UNLOADED_WORLD
 }
 
 private fun makeFilenameSafe(name: String) : String {
@@ -397,6 +404,57 @@ class SimpleWorldManagerApi {
         val sname = makeFilenameSafe(name)
         Bukkit.getWorld(sname) ?: return false
         return true
+    }
+
+    fun setServerSpawn(worldName: String, x: Double, y: Double, z: Double, yaw: Float, pitch: Float) : SetServerSpawnResponse {
+        /*
+        Set global spawn of a server
+         */
+
+        val sname = makeFilenameSafe(worldName)
+        if (!checkWorldExists(sname)) {
+            return SetServerSpawnResponse.NONEXISTENT_WORLD
+        }
+
+        val world = Bukkit.getWorld(sname) ?: return SetServerSpawnResponse.UNLOADED_WORLD
+
+        globalSpawn = Location(world, x, y, z, yaw, pitch)
+
+        return SetServerSpawnResponse.SUCCESS
+    }
+
+    fun setServerSpawn(worldName: String, x: Double, y: Double, z: Double) : SetServerSpawnResponse {
+        /*
+        Set global spawn of a server
+         */
+
+        val sname = makeFilenameSafe(worldName)
+        if (!checkWorldExists(sname)) {
+            return SetServerSpawnResponse.NONEXISTENT_WORLD
+        }
+
+        val world = Bukkit.getWorld(sname) ?: return SetServerSpawnResponse.UNLOADED_WORLD
+
+        globalSpawn = Location(world, x, y, z)
+
+        return SetServerSpawnResponse.SUCCESS
+    }
+
+    fun setServerSpawn(worldName: String) : SetServerSpawnResponse {
+        /*
+        Set global spawn of a server
+         */
+
+        val sname = makeFilenameSafe(worldName)
+        if (!checkWorldExists(sname)) {
+            return SetServerSpawnResponse.NONEXISTENT_WORLD
+        }
+
+        val world = Bukkit.getWorld(sname) ?: return SetServerSpawnResponse.UNLOADED_WORLD
+
+        globalSpawn = world.spawnLocation
+
+        return SetServerSpawnResponse.SUCCESS
     }
 }
 

@@ -13,6 +13,7 @@ import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerChangedWorldEvent
+import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerPortalEvent
 import org.bukkit.event.player.PlayerTeleportEvent
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause
@@ -40,11 +41,28 @@ val worldNames = mutableListOf<String>()
 val forceLoad = mutableListOf<String>()
 
 var enablePortalLinking = true
+var enableSpawnOverride = true
+
+lateinit var globalSpawn: Location
+
 class SimpleWorldManager : JavaPlugin() {
+    fun updateConfig(lastRevision: Int) {
+        when (lastRevision) {
+            1 -> {
+                this.config.set("override-spawn", true)
+                this.config.set("global-spawn.world", "world")
+                this.config.set("global-spawn.xyz", "default")
+                this.config.set("config-version", 2)
+            }
+        }
+    }
+
     override fun onEnable() {
         registerLogger(logger)
 
         this.saveDefaultConfig()
+
+        updateConfig(this.config.getInt("config-version"))
 
         this.config.getStringList("world-names").forEach {
             worldNames.add(it)
@@ -81,6 +99,25 @@ class SimpleWorldManager : JavaPlugin() {
             Bukkit.getServer().pluginManager.registerEvents(PortalLinkListener(), this)
         }
 
+        enableSpawnOverride = this.config.getBoolean("override-spawn")
+
+        val spawnWorld = this.config.getString("global-spawn.world")!!
+
+        if (!simpleWorldManagerApi.checkWorldLoaded(spawnWorld)) {
+            simpleWorldManagerApi.loadWorld(spawnWorld)
+        }
+
+        if (this.config.isList("global-spawn.xyz")) {
+            val xyz = this.config.getDoubleList("global-spawn.xyz")
+            globalSpawn = Location(Bukkit.getWorld(spawnWorld), xyz[0], xyz[1], xyz[2], xyz[3].toFloat(), xyz[4].toFloat())
+        } else {
+            globalSpawn = Bukkit.getWorld(spawnWorld)!!.spawnLocation
+        }
+
+        if (enableSpawnOverride) {
+            Bukkit.getServer().pluginManager.registerEvents(PlayerJoinListener(), this)
+        }
+
         this.getCommand("swm")!!.setExecutor(SwmCommand())
     }
 
@@ -94,8 +131,15 @@ class SimpleWorldManager : JavaPlugin() {
             this.config.set("$path.portal-nether", wc.portalNether)
             this.config.set("$path.portal-end", wc.portalEnd)
         }
+
         this.config.set("world-names", worldNames)
+
         this.config.set("force-load", forceLoad)
+
+        this.config.set("override-spawn", enableSpawnOverride)
+        this.config.set("global-spawn.world", globalSpawn.world!!.name)
+        this.config.set("global-spawn.xyz", arrayOf(globalSpawn.x, globalSpawn.y, globalSpawn.z, globalSpawn.yaw, globalSpawn.pitch))
+
         this.saveConfig()
     }
 
@@ -169,6 +213,13 @@ private class PortalLinkListener : Listener {
 
             ev.setTo(loc)
         }
+    }
+}
+
+private class PlayerJoinListener : Listener {
+    @EventHandler
+    fun onJoin(ev: PlayerJoinEvent) {
+        ev.player.teleport(globalSpawn)
     }
 }
 
@@ -430,6 +481,80 @@ private class SwmCommand() : CommandExecutor {
                                 sender.sendMessage("World not in the forceload list")
                             }
 
+                        }
+                    }
+                }
+                "spawn" -> {
+                    when (args[1]) {
+                        "override" -> {
+                            if (args.size != 3) {
+                                sender.sendMessage("Invalid usage")
+                                return false
+                            }
+                            when (args[2]) {
+                                "enable" -> {
+                                    enableSpawnOverride = true
+                                    sender.sendMessage("Spawn override enabled")
+                                }
+                                "disable" -> {
+                                    enableSpawnOverride = false
+                                    sender.sendMessage("Spawn override disabled")
+                                }
+                                else -> {
+                                    sender.sendMessage("Invalid usage")
+                                    return false
+                                }
+                            }
+                            sender.sendMessage("Please restart the server for the changes to apply")
+                        }
+                        "reset" -> {
+                            globalSpawn = Bukkit.getWorld("world")!!.spawnLocation
+                            sender.sendMessage("Spawn reset")
+                        }
+                        "set" -> {
+                            if (args.size != 4 && args.size != 6 && args.size != 8) {
+                                sender.sendMessage("Invalid usage")
+                                return false
+                            }
+                            if (args[3] == "default") {
+                                when (simpleWorldManagerApi.setServerSpawn(args[2])) {
+                                    SetServerSpawnResponse.UNLOADED_WORLD -> { sender.sendMessage("World is not loaded") }
+                                    SetServerSpawnResponse.NONEXISTENT_WORLD -> { sender.sendMessage("World with that name doesn't exist") }
+                                    SetServerSpawnResponse.SUCCESS -> { sender.sendMessage("Spawn was successfully set") }
+                                }
+                            } else if (args.size == 6) {
+                                val x = args[3].toDoubleOrNull()
+                                val y = args[4].toDoubleOrNull()
+                                val z = args[5].toDoubleOrNull()
+
+                                if (x == null) { sender.sendMessage("X must be a number"); return true }
+                                if (y == null) { sender.sendMessage("Y must be a number"); return true }
+                                if (z == null) { sender.sendMessage("Z must be a number"); return true }
+
+                                when (simpleWorldManagerApi.setServerSpawn(args[2], x, y, z)) {
+                                    SetServerSpawnResponse.UNLOADED_WORLD -> { sender.sendMessage("World is not loaded") }
+                                    SetServerSpawnResponse.NONEXISTENT_WORLD -> { sender.sendMessage("World with that name doesn't exist") }
+                                    SetServerSpawnResponse.SUCCESS -> { sender.sendMessage("Spawn was successfully set") }
+                                }
+                            } else {
+                                val x = args[3].toDoubleOrNull()
+                                val y = args[4].toDoubleOrNull()
+                                val z = args[5].toDoubleOrNull()
+                                val yaw = args[6].toFloatOrNull()
+                                val pitch = args[7].toFloatOrNull()
+
+                                if (x == null) { sender.sendMessage("X must be a number"); return true }
+                                if (y == null) { sender.sendMessage("Y must be a number"); return true }
+                                if (z == null) { sender.sendMessage("Z must be a number"); return true }
+                                if (yaw == null) { sender.sendMessage("Yaw must be a number"); return true }
+                                if (pitch == null) { sender.sendMessage("Pitch must be a number"); return true }
+
+                                when (simpleWorldManagerApi.setServerSpawn(args[2], x, y, z, yaw, pitch)) {
+                                    SetServerSpawnResponse.UNLOADED_WORLD -> { sender.sendMessage("World is not loaded") }
+                                    SetServerSpawnResponse.NONEXISTENT_WORLD -> { sender.sendMessage("World with that name doesn't exist") }
+                                    SetServerSpawnResponse.SUCCESS -> { sender.sendMessage("Spawn was successfully set") }
+                                }
+                            }
                         }
                     }
                 }
