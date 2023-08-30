@@ -1,7 +1,10 @@
 # Config for SimpleWorldManager
 #
-# Edit only if server is not running
+# Edit only if the server is not running
 # else your changes will be overwritten
+#
+# Almost everything here should be able
+# to be changed with an in-game command
 
 force-load:
   - world
