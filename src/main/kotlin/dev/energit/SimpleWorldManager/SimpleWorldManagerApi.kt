@@ -317,7 +317,7 @@ class SimpleWorldManagerApi {
 
         Bukkit.unloadWorld(sname, true)
 
-        if (!File(sname).delete()) {
+        if (!File(sname).deleteRecursively()) {
             return RemoveWorldResponse.FILE_REMOVAL_ERROR
         }
 

@@ -377,8 +377,17 @@ private class SwmCommand() : CommandExecutor {
                     } else if (args.size == 3) {
                         if (args[2] == "confirm") {
                             sender.sendMessage("Removing world")
-                            simpleWorldManagerApi.removeWorld(args[1])
-                            sender.sendMessage("World removed")
+                            when (simpleWorldManagerApi.removeWorld(args[1])) {
+                                RemoveWorldResponse.SUCCESS -> {
+                                    sender.sendMessage("World removed")
+                                }
+                                RemoveWorldResponse.NONEXISTENT_WORLD -> {
+                                    sender.sendMessage("A world with that name doesn't exist")
+                                }
+                                RemoveWorldResponse.FILE_REMOVAL_ERROR -> {
+                                    sender.sendMessage("There was an error while removing thr world files")
+                                }
+                            }
                         } else {
                             sender.sendMessage("Invalid usage")
                             return false
